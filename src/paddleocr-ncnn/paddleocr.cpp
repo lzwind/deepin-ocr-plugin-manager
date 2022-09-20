@@ -30,6 +30,9 @@
 #include <fstream>
 #include <set>
 #include <thread>
+#include <cstdlib>
+#include <cstring>
+#include <filesystem>
 
 void *loadPlugin()
 {
@@ -50,7 +53,36 @@ int pluginVersion(void)
 PaddleOCRApp::PaddleOCRApp()
 {
     //获取资源路径位置
-    currentPath = "/usr/share/deepin-ocr-plugin-manager/model/";
+    std::string fullPath;
+    char *dirs = std::getenv("XDG_DATA_DIRS");
+    do {
+        if(dirs == nullptr) {
+            break;
+        }
+
+        char *token = std::strtok(dirs, ":");
+        while(token != nullptr) {
+            std::string pathPrefix = token;
+            if(pathPrefix[pathPrefix.size() - 1] != '/') {
+                pathPrefix += '/';
+            }
+            fullPath = pathPrefix + "deepin-ocr-plugin-manager/model/";
+            if(std::filesystem::exists(fullPath)) {
+                currentPath = fullPath;
+                break;
+            }
+            token = std::strtok(nullptr, ":");
+        }
+    }while(0);
+
+    if(currentPath.empty()) {
+        fullPath = "/usr/share/deepin-ocr-plugin-manager/model/";
+        if(std::filesystem::exists(fullPath)) {
+            currentPath = fullPath;
+        } else {
+            DEEPIN_LOG("cannot find default model");
+        }
+    }
 }
 
 PaddleOCRApp::~PaddleOCRApp()
@@ -73,6 +105,11 @@ void PaddleOCRApp::resetNet()
 
 void PaddleOCRApp::initNet()
 {
+    if(currentPath.empty()) {
+        DEEPIN_LOG("cannot find default model");
+        DEEPIN_LOG("model load failed");
+    }
+
     if (detNet != nullptr && recNet != nullptr && !keys.empty()) {
         return;
     }

@@ -1,4 +1,4 @@
-prefix=/usr
+prefix=${pcfiledir}/../..
 librarydir=${prefix}/@CMAKE_INSTALL_LIBDIR@
 includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/deepin-ocr-plugin-manager
 
