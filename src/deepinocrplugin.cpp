@@ -404,7 +404,7 @@ bool DeepinOCRDriver::setMatrix(int height, int width, unsigned char *data, size
     }
 }
 
-bool DeepinOCRDriver::setValue(const std::string &key, const std::string value)
+bool DeepinOCRDriver::setValue(const std::string &key, const std::string &value)
 {
     if(!pluginIsLoaded()) {
         DEEPIN_LOG("you need load a plugin first");

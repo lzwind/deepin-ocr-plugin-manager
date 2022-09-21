@@ -60,7 +60,7 @@ bool Plugin::setAuth(std::initializer_list<std::string> params)
     return false;
 }
 
-bool Plugin::setValue(const std::string &key, const std::string value)
+bool Plugin::setValue(const std::string &key, const std::string &value)
 {
     (void)key;
     (void)value;

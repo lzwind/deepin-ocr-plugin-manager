@@ -8,7 +8,7 @@
 
 //插件加载接口，用于加载插件的基础类
 //输入：无
-//输出：插件基础类指针 DeepinOCRPlugin::Plugin * ，由后续的基础类定义章节详细阐述，使用 static_cast 即可转换到 void * 类型
+//输出：插件基础类指针 DeepinOCRPlugin::Plugin * ，使用 static_cast 即可转换到 void * 类型
 extern "C" void* loadPlugin();
 
 //插件卸载接口，用于释放插件相关资源
@@ -18,6 +18,7 @@ extern "C" int unloadPlugin(void *plugin);
 
 //插件版本号接口，用于判断插件是否和开发库的版本匹配，如果不匹配则执行兼容性配置或直接加载失败
 //版本号为形如0xXXYYZZ的十六进制数，其中XX为大版本号，YY为中版本号，ZZ为小版本号。如果使用的开发库的版本号为1.0.23，则此处应该返回0x010023
+//建议直接返回DeepinOCRPlugin::VERSION，这个变量位于deepinocrplugindef.h中
 //输入：无
 //输出：插件的版本号
 extern "C" int pluginVersion(void);
@@ -31,6 +32,7 @@ public:
     virtual ~Plugin() = default;
 
     //硬件加速设置
+
     //设置需要使用的硬件
     //输入：硬件类型、硬件编号
     //输出：是否设置成功
@@ -101,7 +103,7 @@ public:
     //设置数据
     //输入：关键字，值
     //输出：是否设置成功
-    virtual bool setValue(const std::string &key, const std::string value);
+    virtual bool setValue(const std::string &key, const std::string &value);
 
     //获取数据
     //输入：关键字

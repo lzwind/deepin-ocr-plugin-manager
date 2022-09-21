@@ -106,7 +106,7 @@ public:
     //设置数据
     //输入：关键字，值
     //输出：是否设置成功
-    bool setValue(const std::string &key, const std::string value);
+    bool setValue(const std::string &key, const std::string &value);
     
     //获取数据
     //输入：关键字
