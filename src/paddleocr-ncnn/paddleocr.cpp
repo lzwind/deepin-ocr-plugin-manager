@@ -595,6 +595,16 @@ bool PaddleOCRApp::analyze()
         needBreak = false;
         return false;
     } else {
+        //对识别结果进行最后清理，将未识别到文字的检测框排除掉
+        for(uint32_t i = 0;i != boxesResult.size();++i) {
+            if(boxesResult[i].empty()) {
+                boxesResult.erase(boxesResult.begin() + i);
+                textBoxes.erase(textBoxes.begin() + i);
+                charBoxes.erase(charBoxes.begin() + i);
+                --i;
+            }
+        }
+
         return !textBoxes.empty();
     }
 }
