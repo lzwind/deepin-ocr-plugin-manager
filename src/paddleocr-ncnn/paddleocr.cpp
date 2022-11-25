@@ -54,11 +54,17 @@ PaddleOCRApp::PaddleOCRApp()
 {
     //获取资源路径位置
     std::string fullPath;
-    char *dirs = std::getenv("XDG_DATA_DIRS");
+    const char *envDirs = std::getenv("XDG_DATA_DIRS");
+
     do {
-        if(dirs == nullptr) {
+        if(envDirs == nullptr) {
             break;
         }
+
+        // strtok会破坏传入字符串，拷贝副本处理
+        int len = strlen(envDirs);
+        char *dirs = (char *)malloc(sizeof(char) * len);
+        ::memcpy(dirs, envDirs, len);
 
         char *token = std::strtok(dirs, ":");
         while(token != nullptr) {
@@ -73,6 +79,8 @@ PaddleOCRApp::PaddleOCRApp()
             }
             token = std::strtok(nullptr, ":");
         }
+
+        free(dirs);
     }while(0);
 
     if(currentPath.empty()) {
